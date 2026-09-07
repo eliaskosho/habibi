@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Habibi ($HABIBI) · Come to Dubai · Robinhood Chain</title>
+  <meta name="description" content="Habibi is a memecoin on Robinhood Chain. 1% of every trade is collected in Oil, the tokenized oil instrument, and poured out to every holder on a five-minute cycle by the pons V2 vault. $HABIBI, come to Dubai.">
+  <meta name="theme-color" content="#fbf1e2">
+  <!-- Replace DOMAIN-TBD with the real domain once the site has one (also in robots.txt and sitemap.xml). -->
+  <link rel="canonical" href="https://DOMAIN-TBD/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Habibi">
+  <meta property="og:url" content="https://DOMAIN-TBD/">
+  <meta property="og:title" content="Habibi ($HABIBI) · Come to Dubai">
+  <meta property="og:description" content="1% of every trade, collected in Oil and poured out to every holder every five minutes. A memecoin on Robinhood Chain. Habibi, swim in my OIL.">
+  <meta property="og:image" content="https://DOMAIN-TBD/assets/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="The Habibi mascot giving a thumbs up next to the text: Habibi, $HABIBI, Robinhood Chain, come to Dubai">
+
+  <!-- X / Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Habibi ($HABIBI) · Come to Dubai">
+  <meta name="twitter:description" content="1% of every trade, collected in Oil and poured out to every holder every five minutes. A memecoin on Robinhood Chain.">
+  <meta name="twitter:image" content="https://DOMAIN-TBD/assets/og.jpg">
+
+  <!-- Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/favicon-192.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+
+  <link rel="preload" as="image" href="assets/mascot.webp" fetchpriority="high">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- SVG icon sprite. Every icon is drawn by hand; no third-party marks. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-barrel" viewBox="0 0 24 24"><path d="M6 3h12v18H6zM6 8.5h12M6 15.5h12M4 3h16M4 21h16"/></symbol>
+    <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/></symbol>
+    <symbol id="i-percent" viewBox="0 0 24 24"><path d="M19 5 5 19M6.5 9a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm11 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zm0-14v4l3 2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><path d="M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zm7-1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 14c2.8 0 5 2.2 5 5"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1h1a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7zm13 5h4M3 9h16"/></symbol>
+    <symbol id="i-network" viewBox="0 0 24 24"><path d="M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zm0-14v8m-4-4h8"/></symbol>
+    <symbol id="i-swap" viewBox="0 0 24 24"><path d="M7 4v13m0 0-3-3m3 3 3-3M17 20V7m0 0-3 3m3-3 3 3"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><path d="M9 9h10v11H9zM5 15H4V4h11v1"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M19 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1h5"/></symbol>
+    <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 5-7 7 7 7"/></symbol>
+    <symbol id="i-right" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 6-8"/></symbol>
+    <symbol id="i-telegram" viewBox="0 0 24 24"><path d="M21.5 4.2 18.4 19.6c-.2 1-.9 1.3-1.8.8l-4.8-3.6-2.3 2.3c-.3.3-.5.5-1 .5l.3-4.9 9-8.2c.4-.4-.1-.6-.6-.2L6.1 13.4 1.4 11.9c-1-.3-1-1 .2-1.5L20.1 3c.8-.3 1.6.2 1.4 1.2z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18.2 2.3h3.3l-7.2 8.2 8.5 11.2h-6.7l-5.2-6.8-6 6.8H1.7l7.7-8.8L1.3 2.3h6.8l4.7 6.2 5.4-6.2zm-1.2 17.5h1.8L7.1 4.1H5.1l11.9 15.7z" fill="currentColor" stroke="none"/></symbol>
+    <!-- Pumpjack silhouette for the hero horizon -->
+    <symbol id="pumpjack" viewBox="0 0 120 100">
+      <path d="M52 40 40 100h6l10-44 10 44h6L60 40z"/>
+      <path d="M96 42l5 26h-8z"/>
+      <circle cx="101" cy="78" r="11"/>
+      <path d="M14 34h84v8H14z"/>
+      <path d="M4 30l24-4v24L8 46z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ============ 1. Sticky topbar ============ -->
+<header class="topbar" id="top">
+  <div class="topbar__inner">
+    <a class="brand" href="#top" aria-label="Habibi, back to top">
+      <img src="assets/logo.webp" alt="" width="36" height="36">
+      <span class="brand__name">Habibi</span>
+    </a>
+
+    <nav class="topnav" aria-label="Sections">
+      <a href="#live">Live</a>
+      <a href="#how">How</a>
+      <a href="#tokenomics">Habibinomics</a>
+      <a href="#buy">Buy</a>
+      <a href="#memes">Memes</a>
+    </nav>
+
+    <button class="ca ca--bar" type="button" data-copy-ca title="Copy contract address">
+      <span class="ca__tag">CA</span>
+      <span class="ca__text" data-ca-text="short">CA revealed at launch</span>
+      <svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg>
+    </button>
+
+    <a class="btn btn--sun btn--sm" data-buy href="#buy">Buy <span class="hide-xs">$HABIBI</span></a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ 2. Hero ============ -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap hero__inner">
+    <div class="hero__figure reveal">
+      <p class="bubble">Habibi, I'm about to <strong>fuel the world.</strong></p>
+      <div class="hero__sun" aria-hidden="true"></div>
+      <img class="hero__mascot" src="assets/mascot.webp" alt="Habibi, the mascot: a cartoon guy in a white thobe, winking, thumbs up, coffee in hand" width="705" height="1000" fetchpriority="high" decoding="async">
+    </div>
+
+    <div class="hero__copy">
+      <p class="hero__ticker reveal">$HABIBI&nbsp;·&nbsp;Robinhood Chain</p>
+      <h1 class="hero__title reveal" id="hero-title">Habibi</h1>
+      <p class="hero__hook reveal">$HABIBI — come to Dubai.</p>
+      <p class="hero__lede reveal">Every trade fills the barrel. <strong>1% of every swap</strong> is collected in Oil and poured out to every holder, every five minutes. No claiming. No forms. Just Oil, habibi.</p>
+
+      <div class="hero__cta reveal">
+        <a class="btn btn--sun btn--lg" data-buy href="#buy">Buy $HABIBI</a>
+        <a class="btn btn--ghost btn--lg" data-social="telegram" href="#" target="_blank" rel="noopener">
+          <svg class="ico" aria-hidden="true"><use href="#i-telegram"/></svg> Telegram
+        </a>
+        <a class="btn btn--ghost btn--lg" data-social="x" href="#" target="_blank" rel="noopener" aria-label="Habibi on X">
+          <svg class="ico" aria-hidden="true"><use href="#i-x"/></svg> X
+        </a>
+        <a class="btn btn--ghost btn--lg" data-link="dexscreener" href="#" target="_blank" rel="noopener">
+          <svg class="ico" aria-hidden="true"><use href="#i-chart"/></svg> DEXScreener
+        </a>
+        <a class="btn btn--ghost btn--lg" href="#how">How it works</a>
+      </div>
+
+      <ul class="stamps reveal" aria-label="Key facts">
+        <li><svg class="ico" aria-hidden="true"><use href="#i-percent"/></svg> 1% of every trade</li>
+        <li><svg class="ico" aria-hidden="true"><use href="#i-drop"/></svg> Paid in Oil</li>
+        <li><svg class="ico" aria-hidden="true"><use href="#i-clock"/></svg> Poured every 5 min</li>
+        <li><svg class="ico" aria-hidden="true"><use href="#i-users"/></svg> To every holder</li>
+      </ul>
+
+      <div class="ca ca--hero reveal">
+        <span class="ca__tag">Contract</span>
+        <code class="ca__text" data-ca-text="full">CA revealed at launch</code>
+        <button class="ca__copy" type="button" data-copy-ca title="Copy contract address" aria-label="Copy contract address">
+          <svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span>
+        </button>
+        <a class="ca__explorer" data-explorer-link href="#" target="_blank" rel="noopener" hidden>
+          Blockscout <svg class="ico" aria-hidden="true"><use href="#i-external"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Oil-field horizon -->
+  <div class="horizon" aria-hidden="true">
+    <svg class="pj pj--1"><use href="#pumpjack"/></svg>
+    <svg class="pj pj--2"><use href="#pumpjack"/></svg>
+    <svg class="pj pj--3"><use href="#pumpjack"/></svg>
+    <svg class="pj pj--4"><use href="#pumpjack"/></svg>
+  </div>
+</section>
+
+<!-- ============ 3. Live panel ============ -->
+<section class="section live" id="live" aria-labelledby="live-title">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">Live from Robinhood Chain</p>
+      <h2 id="live-title">Habibi, swim in my <span class="accent">OIL.</span></h2>
+      <p class="status"><span class="dot" data-live-dot></span> <span data-live-status>Live after launch</span></p>
+      <p class="section__sub">Read straight from the chain, refreshed every 30 seconds. Every pour is one transaction you can open on Blockscout.</p>
+    </header>
+
+    <div class="stats reveal">
+      <article class="stat stat--wide">
+        <p class="stat__label">Oil poured to holders</p>
+        <p class="stat__value stat__value--gold" data-stat="totalDistributed">—</p>
+        <p class="stat__note" data-stat-note="totalDistributed">Live after launch</p>
+      </article>
+      <article class="stat">
+        <p class="stat__label">Last pour</p>
+        <p class="stat__value" data-stat="lastPayout">—</p>
+        <p class="stat__note" data-stat-note="lastPayout">Live after launch</p>
+      </article>
+      <article class="stat">
+        <p class="stat__label">Next pour in</p>
+        <p class="stat__value stat__value--mono" data-stat="countdown">—</p>
+        <p class="stat__note" data-stat-note="countdown">Measured from real pours</p>
+      </article>
+      <article class="stat">
+        <p class="stat__label">Habibis holding</p>
+        <p class="stat__value" data-stat="holders">—</p>
+        <p class="stat__note" data-stat-note="holders">Live after launch</p>
+      </article>
+      <article class="stat">
+        <p class="stat__label">Price</p>
+        <p class="stat__value" data-stat="price">—</p>
+        <p class="stat__note" data-stat-note="price">in Oil · Live after launch</p>
+      </article>
+      <article class="stat">
+        <p class="stat__label">Market cap</p>
+        <p class="stat__value" data-stat="marketCap">—</p>
+        <p class="stat__note" data-stat-note="marketCap">Live after launch</p>
+      </article>
+      <article class="stat">
+        <p class="stat__label">24 h volume</p>
+        <p class="stat__value" data-stat="volume">—</p>
+        <p class="stat__note" data-stat-note="volume">Live after launch</p>
+      </article>
+    </div>
+
+    <p class="live__meta" data-live-meta hidden></p>
+
+    <div class="links reveal" data-listing-links hidden>
+      <span class="links__label">Charts &amp; listings</span>
+      <a class="chip chip--dark" data-link="dexscreener" href="#" target="_blank" rel="noopener">DEXScreener</a>
+      <a class="chip chip--dark" data-link="dextools" href="#" target="_blank" rel="noopener">DEXTools</a>
+      <a class="chip chip--dark" data-link="coinmarketcap" href="#" target="_blank" rel="noopener">CoinMarketCap</a>
+      <a class="chip chip--dark" data-link="coingecko" href="#" target="_blank" rel="noopener">CoinGecko</a>
+      <a class="chip chip--dark" data-explorer-link href="#" target="_blank" rel="noopener" hidden>Blockscout</a>
+    </div>
+  </div>
+  <div class="drips" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+</section>
+
+<!-- ============ 4. How it works ============ -->
+<section class="section how" id="how" aria-labelledby="how-title">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">How it works</p>
+      <h2 id="how-title">Three steps. <span class="accent">Zero sweat, habibi.</span></h2>
+    </header>
+
+    <ol class="steps reveal">
+      <li class="step">
+        <span class="step__num">1</span>
+        <svg class="step__icon" aria-hidden="true"><use href="#i-swap"/></svg>
+        <h3>Someone trades $HABIBI</h3>
+        <p>Buy or sell on pons, it all counts. Volume is what fills the barrel.</p>
+      </li>
+      <li class="step">
+        <span class="step__num">2</span>
+        <svg class="step__icon" aria-hidden="true"><use href="#i-barrel"/></svg>
+        <h3>1% goes into the barrel, in Oil</h3>
+        <p>The creator tax on every trade is collected in Oil, the tokenized oil instrument on Robinhood Chain. Never in $HABIBI itself.</p>
+      </li>
+      <li class="step">
+        <span class="step__num">3</span>
+        <svg class="step__icon" aria-hidden="true"><use href="#i-drop"/></svg>
+        <h3>The vault pours it out</h3>
+        <p>Every five minutes the pons V2 token vault sends the collected Oil to every holder, pro rata. Nothing to claim, nothing to press. This site only reads the results.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- Marquee band -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    <span>$HABIBI ✦ Habibi, swim in my OIL ✦ Come to Dubai ✦ 1% of every trade, in Oil ✦ Poured every 5 minutes ✦ Robinhood Chain ✦ HABIBI, I'm about to fuel the world ✦ More barrels, more brothers ✦ Fixed supply ✦ Habibi, the best is yet to come ✦&nbsp;</span>
+    <span>$HABIBI ✦ Habibi, swim in my OIL ✦ Come to Dubai ✦ 1% of every trade, in Oil ✦ Poured every 5 minutes ✦ Robinhood Chain ✦ HABIBI, I'm about to fuel the world ✦ More barrels, more brothers ✦ Fixed supply ✦ Habibi, the best is yet to come ✦&nbsp;</span>
+  </div>
+</div>
+
+<!-- ============ 5. Tokenomics ============ -->
+<section class="section tokenomics" id="tokenomics" aria-labelledby="tok-title">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">Tokenomics</p>
+      <h2 id="tok-title"><span class="accent">Habibinomics.</span> The barrel, itemized.</h2>
+    </header>
+
+    <div class="grid grid--tok reveal">
+      <article class="card">
+        <p class="card__big">1,000,000,000</p>
+        <h3>Total supply</h3>
+        <p>One billion $HABIBI, minted once. That is the whole family.</p>
+      </article>
+      <article class="card">
+        <p class="card__big">Fixed</p>
+        <h3>No mint. Ever.</h3>
+        <p>Supply is set at creation and cannot be changed.</p>
+      </article>
+      <article class="card">
+        <p class="card__big">1%</p>
+        <h3>Creator tax</h3>
+        <p>On every buy and every sell. Collected in Oil, never in $HABIBI.</p>
+      </article>
+      <article class="card">
+        <p class="card__big">Oil</p>
+        <h3>What holders receive</h3>
+        <p>A tokenized oil instrument on Robinhood Chain. Habibi does not pay in memes. Habibi pays in Oil.</p>
+      </article>
+      <article class="card">
+        <p class="card__big">5 min</p>
+        <h3>The cycle</h3>
+        <p>The pons V2 vault distributes collected Oil to all holders on a five-minute cycle. The live panel shows the cadence it actually measures.</p>
+      </article>
+      <article class="card">
+        <p class="card__big">Pro rata</p>
+        <h3>Who gets it</h3>
+        <p>Every holder, in proportion to their bag. Big bag, big pour. Small bag, still a pour.</p>
+      </article>
+    </div>
+    <p class="fineprint reveal">Collection and distribution are handled natively by the pons V2 token vault. This site runs no distribution logic of its own; it only reads what happened on-chain.</p>
+  </div>
+</section>
+
+<!-- ============ 6. How to buy ============ -->
+<section class="section buy" id="buy" aria-labelledby="buy-title">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">How to buy</p>
+      <h2 id="buy-title">Habibi, <span class="accent">come to Dubai.</span></h2>
+      <p class="section__sub">Three steps. A wallet, the network, one swap. pons handles the Oil.</p>
+    </header>
+
+    <ol class="buysteps reveal">
+      <li class="buystep">
+        <div class="buystep__head">
+          <span class="buystep__num">1</span>
+          <svg class="buystep__icon" aria-hidden="true"><use href="#i-wallet"/></svg>
+          <h3>Get an EVM wallet</h3>
+        </div>
+        <p>MetaMask or Rabby, on mobile or as a browser extension. Robinhood Chain is an Arbitrum Orbit L2, so any EVM wallet works.</p>
+        <div class="buystep__actions">
+          <a class="chip" href="https://metamask.io/download" target="_blank" rel="noopener">MetaMask <svg class="ico" aria-hidden="true"><use href="#i-external"/></svg></a>
+          <a class="chip" href="https://rabby.io" target="_blank" rel="noopener">Rabby <svg class="ico" aria-hidden="true"><use href="#i-external"/></svg></a>
+        </div>
+      </li>
+
+      <li class="buystep">
+        <div class="buystep__head">
+          <span class="buystep__num">2</span>
+          <svg class="buystep__icon" aria-hidden="true"><use href="#i-network"/></svg>
+          <h3>Add Robinhood Chain</h3>
+        </div>
+        <p>One tap if your wallet lives in this browser. Otherwise add it by hand with the details below.</p>
+        <div class="buystep__actions">
+          <button class="btn btn--sun" type="button" data-add-network>Add network to wallet</button>
+        </div>
+        <dl class="netinfo">
+          <div><dt>Network name</dt><dd>Robinhood Chain</dd></div>
+          <div><dt>Chain ID</dt><dd><button class="copyval" type="button" data-copy="4663">4663 <svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg></button></dd></div>
+          <div><dt>RPC URL</dt><dd><button class="copyval" type="button" data-copy="https://rpc.mainnet.chain.robinhood.com">https://rpc.mainnet.chain.robinhood.com <svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg></button></dd></div>
+          <div><dt>Currency</dt><dd>ETH</dd></div>
+          <div><dt>Explorer</dt><dd><button class="copyval" type="button" data-copy="https://robinhoodchain.blockscout.com">https://robinhoodchain.blockscout.com <svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg></button></dd></div>
+        </dl>
+      </li>
+
+      <li class="buystep buystep--wide">
+        <div class="buystep__head">
+          <span class="buystep__num">3</span>
+          <svg class="buystep__icon" aria-hidden="true"><use href="#i-bolt"/></svg>
+          <h3>Swap into $HABIBI on pons</h3>
+        </div>
+        <p>Open the pons page, check that the contract address matches the one on this site, pick your amount, confirm in your wallet. <strong>You do not need Oil first.</strong> pons handles the swap straight into $HABIBI. Keep a little ETH for gas.</p>
+        <div class="buystep__actions">
+          <a class="btn btn--sun" data-buy href="#buy">Buy $HABIBI on pons</a>
+          <a class="chip" href="https://www.ponsfamily.com/launchpad" target="_blank" rel="noopener">pons launchpad <svg class="ico" aria-hidden="true"><use href="#i-external"/></svg></a>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ 7. Meme gallery ============ -->
+<section class="section gallery" id="memes" aria-labelledby="memes-title">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">The family album</p>
+      <h2 id="memes-title">Fresh from the desert, <span class="accent">habibi.</span></h2>
+      <p class="section__sub">Screenshot freely. Made one yourself? Bring it to the family.</p>
+    </header>
+
+    <figure class="banner reveal" data-banner hidden>
+      <img alt="Habibi banner: the mascot on a ridge above an oil field at sunset" loading="lazy" decoding="async">
+    </figure>
+
+    <div class="album reveal" data-gallery aria-live="polite"></div>
+
+    <div class="empty" data-gallery-empty hidden>
+      <svg class="empty__icon" aria-hidden="true"><use href="#i-camera"/></svg>
+      <p><strong>The album is still empty.</strong><br>Memes land here soon.</p>
+      <a class="btn btn--ghost" data-social="telegram" href="#" target="_blank" rel="noopener">Join Telegram</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. Roadmap ============ -->
+<section class="section roadmap" id="roadmap" aria-labelledby="road-title">
+  <div class="wrap">
+    <header class="section__head reveal">
+      <p class="eyebrow">Roadmap</p>
+      <h2 id="road-title">The <span class="accent">caravan.</span></h2>
+      <p class="section__sub">No dates. No price talk. Just the next dunes.</p>
+    </header>
+
+    <ol class="route reveal">
+      <li class="stop">
+        <span class="stop__marker">1</span>
+        <div class="stop__body">
+          <h3>Launch on pons</h3>
+          <p>Fixed supply, fair curve, creator tax collected in Oil from the very first trade.</p>
+        </div>
+      </li>
+      <li class="stop">
+        <span class="stop__marker">2</span>
+        <div class="stop__body">
+          <h3>Family &amp; listings</h3>
+          <p>Telegram, X, DEXScreener, DEXTools. Then CoinMarketCap and CoinGecko.</p>
+        </div>
+      </li>
+      <li class="stop">
+        <span class="stop__marker">3</span>
+        <div class="stop__body">
+          <h3>First Oil poured</h3>
+          <p>Pours running and verifiable on Blockscout. The live panel up top lights up.</p>
+        </div>
+      </li>
+      <li class="stop">
+        <span class="stop__marker">4</span>
+        <div class="stop__body">
+          <h3>Habibi, the best is yet to come</h3>
+          <p>More memes, more tooling, whatever the family ships next.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ 9. Footer ============ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <a class="brand" href="#top">
+        <img src="assets/logo.webp" alt="" width="44" height="44" loading="lazy">
+        <span class="brand__name">Habibi</span>
+      </a>
+      <nav class="footer__links" aria-label="Links">
+        <a data-social="telegram" href="#" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-telegram"/></svg> Telegram</a>
+        <a data-social="x" href="#" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg> X</a>
+        <a data-buy-link href="https://www.ponsfamily.com/launchpad" target="_blank" rel="noopener">pons <svg class="ico" aria-hidden="true"><use href="#i-external"/></svg></a>
+        <a data-link="dexscreener" href="#" target="_blank" rel="noopener">DEXScreener <svg class="ico" aria-hidden="true"><use href="#i-external"/></svg></a>
+        <a data-explorer-link data-explorer-fallback="https://robinhoodchain.blockscout.com" href="https://robinhoodchain.blockscout.com" target="_blank" rel="noopener">Blockscout <svg class="ico" aria-hidden="true"><use href="#i-external"/></svg></a>
+      </nav>
+    </div>
+
+    <div class="footer__risk">
+      <p><strong>Risk.</strong> $HABIBI is an experimental token. It can lose all of its value. Distributions depend on trading volume and on the pons vault working as described; nothing here is promised. Nothing on this site is financial advice. Do your own research and never spend more than you can afford to lose.</p>
+      <p>Markets paired against tokenized instruments on pons are not available to traders in the United States.</p>
+      <p>Habibi is an independent community project. It is not affiliated with, endorsed by, or sponsored by Robinhood, pons, or the issuer of the Oil instrument. "Robinhood Chain" and "Oil" are used only to describe where the token lives and which asset distributions are paid in.</p>
+    </div>
+
+    <p class="footer__copy">© <span data-year>2026</span> Habibi. An independent community project.</p>
+  </div>
+</footer>
+
+<!-- Lightbox -->
+<div class="lightbox" data-lightbox hidden role="dialog" aria-modal="true" aria-label="Meme viewer">
+  <button class="lightbox__close" type="button" data-lb-close aria-label="Close"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button>
+  <button class="lightbox__nav lightbox__nav--prev" type="button" data-lb-prev aria-label="Previous"><svg class="ico" aria-hidden="true"><use href="#i-left"/></svg></button>
+  <figure class="lightbox__figure">
+    <img data-lb-img alt="">
+    <figcaption data-lb-caption></figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" type="button" data-lb-next aria-label="Next"><svg class="ico" aria-hidden="true"><use href="#i-right"/></svg></button>
+</div>
+
+<div class="toast" data-toast role="status" aria-live="polite" hidden></div>
+
+<script src="main.js" defer></script>
+</body>
+</html>

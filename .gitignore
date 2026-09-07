@@ -1,0 +1,14 @@
+# OS / editor noise
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+
+# Dependencies / secrets / logs
+node_modules/
+.env
+.env.*
+*.log
+
+# Held-back images stay local (see review/README.md)
+review/*.webp
