@@ -23,25 +23,28 @@ tools/
 
 ## 1. CONFIG (launch data)
 
-Open `main.js`. The first thing in the file is the `CONFIG` block. It is the only thing you edit; every other file reads from it. Everything is `null` until launch, and the site works with everything `null`: buy buttons read "Launching soon", the CA reads "CA revealed at launch", missing links are removed (never a dead `#`), the live panel shows `—` with "Live after launch".
+Open `main.js`. The first thing in the file is the `CONFIG` block. It is the only thing you edit; every other file reads from it. The token launched on 2026-09-08, so the block now holds real values. Any key set back to `null` returns that part of the page to its pre-launch state on its own: buy buttons read "Launching soon", the CA reads "CA revealed at launch", missing links are removed (never a dead `#`), the live panel shows `—` with "Live after launch".
 
-| Key | Fill in with | What it switches on |
+| Key | Live value | What it switches on |
 |---|---|---|
-| `contractAddress` | the $HABIBI token contract | CA in topbar + hero, copy button, Blockscout link, live panel (holders, supply, price, market cap, volume) |
-| `buyUrl` | pons trade page, `https://www.ponsfamily.com/launchpad/<contractAddress>` | Every "Buy" button and the footer pons link. If `null` while `contractAddress` is set, it is derived automatically |
-| `dexscreener` | pair page on DEXScreener | Hero button, chip under the live panel, footer link. The pair id in the URL is also what the live panel reads price, market cap and 24 h volume from |
+| `contractAddress` | `0x79b5E43aA2e43eee21B9ddf1855a6dd2833Ac533` (checksummed; this exact string is shown and copied) | CA in topbar + hero, copy button, Blockscout link, live panel (holders, supply, price, market cap, volume) |
+| `buyUrl` | pons trade page for the token | Every "Buy" button and the footer pons link. If `null` while `contractAddress` is set, it is derived as `https://www.ponsfamily.com/launchpad/<contractAddress>` |
+| `dexscreener` | pair `0x6575c060…77d81` (HABIBI / USO on Uniswap v4) | Hero button, chip under the live panel, footer link. The pair id in the URL is also what the live panel reads price, market cap and 24 h volume from |
 | `explorer` | Blockscout token page | All "Blockscout" links. `null` = derived from the chain explorer + `contractAddress` |
-| `telegram`, `x` | community links | Every Telegram / X link on the page. `null` = those links are removed |
-| `dextools`, `coinmarketcap`, `coingecko` | listing pages, when listed | Chips under the live panel. `null` = removed from the page |
-| `rewardTokenAddress` | the Oil instrument on Robinhood Chain (the pair's quote asset) | Distribution stats, and picks the Oil-quoted pair on DEXScreener |
-| `distributorAddress` | the pons vault / distributor that sends Oil to holders (the pool's creator-fee recipient) | "Oil poured to holders", "Last pour", measured cadence |
-| `distributionFromBlock` | block just before the pool went live | Where the pour scan starts. Without it the scan is capped to the last ~3.5 days and the total is shown with "≈" |
-| `feeEscrowAddress` | pons V2 fee escrow | "… Oil collected, waiting for the next pour" under the total |
+| `website` | `https://www.habibioil.xyz/` | The domain chip in the footer. `null` = removed |
+| `telegram`, `x` | `t.me/HabibimemesRh`, `x.com/HabibiOilRH` | Every Telegram / X link on the page. `null` = those links are removed |
+| `dextools`, `coinmarketcap`, `coingecko` | `null`, not listed yet | Chips under the live panel. `null` = removed from the page |
+| `rewardTokenAddress` | `0xa30FA36Db767ad9eD3f7a60fC79526fB4d56D344` — USO, the tokenized United States Oil Fund token on Robinhood Chain, the pair's quote asset | Distribution stats, and picks the USO-quoted pair on DEXScreener |
+| `distributorAddress` | `0x62283AAae4C807807ddbC51ff85C694cd5582cdd` — the pons holder-distributor for this launch | "Oil poured to holders", "Last pour", measured cadence |
+| `distributionFromBlock` | `57601180`, the block of the token's creation transaction | Where the pour scan starts. Without it the scan is capped to the last ~3.5 days and the total is shown with "≈" |
+| `feeEscrowAddress` | `0xd3AFEB2a57f70eF218Aa82451c51B2fb0416Ac9e` — pons V2 fee escrow | "… USO collected, waiting for the next pour" under the total |
 | `totalDistributedCall` | `null` | Optional `{ to, data }` `eth_call` returning the lifetime total as `uint256`, if the vault ever exposes one |
 
-Setting a key back to `null` returns that part of the page to its pre-launch state.
+### How the distributor was identified (2026-09-08)
 
-**Domain.** `index.html`, `robots.txt` and `sitemap.xml` contain the placeholder `DOMAIN-TBD` in the canonical URL, the Open Graph URL and the `og:image` URL. Replace it with the real domain (one find-and-replace) once the site has one, otherwise link previews on X and Telegram will not find the image.
+Not guessed. `PonsV2LaunchFactory` (`0x7eD598Bc…`) exposes `getLaunchedToken(address)`; called with the Habibi contract it returns the launch record, whose `creatorFeeRecipient` is `0x62283AAae4C807807ddbC51ff85C694cd5582cdd`. That contract's own `token()` returns the Habibi address, and the pons fee escrow's `balanceOfToken(distributor, USO)` returns a growing USO balance credited to it. The same record confirms `creatorTaxBps = 100` (1 %) and `pairToken = USO`.
+
+**Domain.** The canonical URL, the Open Graph URL and `og:image` in `index.html`, plus `robots.txt` and `sitemap.xml`, all point at `https://www.habibioil.xyz/`. If the domain ever changes, that is a find-and-replace across those three files; `CONFIG.website` only drives the footer chip.
 
 ### Where the live numbers come from
 
@@ -51,8 +54,8 @@ Setting a key back to `null` returns that part of the page to its pre-launch sta
 | Holders | Blockscout API v2 (`/api/v2/tokens/<address>`, fallback `/counters`) |
 | Price, market cap, 24 h volume, trade count | DEXScreener public API, pair taken from `dexscreener` |
 | Oil poured, last pour, pour count | Robinhood Chain RPC: `eth_getLogs` for Oil transfers sent by `distributorAddress` since `distributionFromBlock`, chunked (250k blocks, halved on failure) and cached in the browser so only new blocks are scanned on refresh. Blockscout as a bounded fallback; `totalDistributedCall` if set |
-| Oil collected, waiting for the next pour | `feeEscrowAddress.balanceOfToken(distributorAddress, rewardTokenAddress)` via RPC |
-| Next pour in | Median gap between the newest pours (up to 8), counted from the last one. Shows "—" until two pours exist. **Never a fixed timer**: the copy says the vault runs on a five-minute cycle, the panel shows what the chain actually did |
+| Oil collected, waiting for the next pour | Two RPC reads added together: `feeEscrowAddress.balanceOfToken(distributorAddress, rewardTokenAddress)` (still in the escrow) plus `rewardToken.balanceOf(distributorAddress)` (already claimed out of the escrow, held by the vault). Reading only the escrow understates it badly right after a claim |
+| Next pour in | Median gap between the newest pours (up to 8), counted from the last one. **The card is not rendered at all until two real pours have been measured**, so the site never counts down to an event that has not happened. Never a fixed timer |
 
 If a source is down, the panel keeps the last known values (cached in the browser) with an "Updated HH:MM" stamp and the status "Reconnecting". It never shows a spinner forever.
 
@@ -106,7 +109,6 @@ No build step. Upload the folder as-is.
 2. vercel.com → Add New Project → import the repo.
 3. Framework preset: **Other**. Build command: empty. Output directory: `./` (root).
 4. Deploy. Add the domain under Settings → Domains and point the DNS as Vercel shows.
-5. Replace `DOMAIN-TBD` (see above) with that domain and push again.
 
 Or from a terminal: `npx vercel --prod` inside the folder.
 
@@ -131,10 +133,12 @@ Opening `index.html` directly from disk works too, except the gallery manifest l
 | RPC | `https://rpc.mainnet.chain.robinhood.com` |
 | Explorer | `https://robinhoodchain.blockscout.com` |
 | Launchpad | pons V2, `https://www.ponsfamily.com/launchpad` |
-| Paired asset / reward | Oil, a tokenized oil instrument on Robinhood Chain |
+| Contract | `0x79b5E43aA2e43eee21B9ddf1855a6dd2833Ac533`, verified on Blockscout, launched 2026-09-08 09:58 UTC in block 57601180 |
+| Pair | HABIBI / USO on Uniswap v4, DEXScreener id `0x6575c060…77d81` |
+| Paired asset / reward | USO (`0xa30FA36D…D344`), the tokenized United States Oil Fund token on Robinhood Chain. The copy calls it "Oil"; every number on the page carries the real ticker, USO |
 | Supply | 1,000,000,000, fixed |
-| Fee | 1 % creator tax on every trade, collected in Oil |
-| Distribution | to all holders, pro rata, on a five-minute cycle, handled natively by the pons V2 token vault. The live panel shows the real cadence |
+| Fee | 1 % creator tax on every trade (`creatorTaxBps = 100` in the pons launch record), collected in USO |
+| Distribution | to all holders, pro rata, handled natively by the pons V2 token vault: fees accrue in the pons escrow credited to the distributor, and the vault claims and multi-sends them in rounds. **The site does not state an interval.** 80 minutes after launch the escrow held 7.9 USO and no pour had happened yet, so the live panel showed "No pour yet" and hid the countdown. It shows only the cadence it measures |
 
 To change any copy, edit `index.html` directly. The "Add network to wallet" button calls `wallet_addEthereumChain` with the values in the `CHAIN` object at the top of `main.js`.
 

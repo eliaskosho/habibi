@@ -15,21 +15,25 @@
    - As soon as a value is set, the matching UI switches on.
    ------------------------------------------------------------ */
 const CONFIG = {
-  // $HABIBI token contract on Robinhood Chain. Turns on: CA display + copy,
-  // explorer link, and the live panel (holders, supply, price, market cap, volume).
-  contractAddress: null,
+  // $HABIBI token contract on Robinhood Chain, checksummed: this exact string is what
+  // the site shows and copies. Turns on: CA display + copy, explorer link, and the
+  // live panel (holders, supply, price, market cap, volume).
+  contractAddress: '0x79b5E43aA2e43eee21B9ddf1855a6dd2833Ac533',
 
   // pons trade page. If null while contractAddress is set, it is derived as
   // https://www.ponsfamily.com/launchpad/<contractAddress>
-  buyUrl: null,
+  buyUrl: 'https://www.ponsfamily.com/launchpad/0x79b5e43aa2e43eee21b9ddf1855a6dd2833ac533',
 
   // Chart / listing links. null = hidden entirely, never a dead link.
   // The DEXScreener URL also tells the live panel which pair to read
   // price, market cap and 24 h volume from.
-  dexscreener: null,
-  explorer: null,          // Blockscout token page. null = derived from the chain explorer + contractAddress.
-  telegram: null,          // Every Telegram link on the page follows this. null = links removed.
-  x: null,                 // Every X link on the page follows this. null = links removed.
+  dexscreener: 'https://dexscreener.com/robinhood/0x6575c060ef630d2dd5d4ddbcded0dac8d7031c5ec36a71c1e0584102ae477d81',
+  explorer: 'https://robinhoodchain.blockscout.com/token/0x79b5E43aA2e43eee21B9ddf1855a6dd2833Ac533',   // null = derived from the chain explorer + contractAddress
+  website: 'https://www.habibioil.xyz/',   // footer link. The canonical / Open Graph URLs are static in index.html.
+  telegram: 'https://t.me/HabibimemesRh',  // Every Telegram link on the page follows this. null = links removed.
+  x: 'https://x.com/HabibiOilRH',          // Every X link on the page follows this. null = links removed.
+
+  // Not listed yet. null = hidden.
   dextools: null,
   coinmarketcap: null,
   coingecko: null,
@@ -48,10 +52,10 @@ const CONFIG = {
                               null = summed from every pour found on-chain.
      The pour cadence is never configured: it is measured from real pours.
   ------------------------------------------------------------------------- */
-  rewardTokenAddress: null,
-  distributorAddress: null,
-  distributionFromBlock: null,
-  feeEscrowAddress: null,
+  rewardTokenAddress: '0xa30FA36Db767ad9eD3f7a60fC79526fB4d56D344',   // USO (United States Oil Fund token) on Robinhood Chain, the pair's quote asset
+  distributorAddress: '0x62283AAae4C807807ddbC51ff85C694cd5582cdd',   // pons holder-distributor for HABIBI: factory.getLaunchedToken(token).creatorFeeRecipient; its token() is HABIBI
+  distributionFromBlock: 57601180,   // block of the token's creation tx (2026-09-08 09:58 UTC): the pour scan starts here
+  feeEscrowAddress: '0xd3AFEB2a57f70eF218Aa82451c51B2fb0416Ac9e',    // pons V2 fee escrow; balanceOfToken(distributor, USO) verified 2026-09-08
   totalDistributedCall: null,
 };
 
@@ -67,7 +71,9 @@ const CHAIN = {
   nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
 };
 const TICKER = '$HABIBI';
-const REWARD = { symbol: 'Oil' };   // what holders are paid in; amounts render as "12.5 Oil"
+// What holders are paid in. `symbol` is the real ticker of the reward token and is what
+// every number on the page carries ("12.5 USO"); `name` is the friendly word the copy uses.
+const REWARD = { symbol: 'USO', name: 'Oil' };
 const PONS_LAUNCHPAD = 'https://www.ponsfamily.com/launchpad';
 // Pour cadence is measured from real rounds (measureCadence), never assumed.
 const STATS_POLL_MS = 30_000;
@@ -260,6 +266,16 @@ function initSocialLinks() {
   });
 }
 
+// The site's own domain (footer). Unknown = removed.
+function initWebsiteLink() {
+  $$('[data-website]').forEach((a) => {
+    if (!CONFIG.website) { a.remove(); return; }
+    a.href = CONFIG.website;
+    a.textContent = CONFIG.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '');
+    a.hidden = false;
+  });
+}
+
 /* ------------------------------------------------------------
    5. Generic copy buttons (chain id, RPC, explorer)
    ------------------------------------------------------------ */
@@ -325,6 +341,7 @@ function initAddNetwork() {
 const SEL = {
   totalSupply: '0x18160ddd',
   decimals: '0x313ce567',
+  balanceOf: '0x70a08231',        // balanceOf(address) — ERC-20
   balanceOfToken: '0xf59e38b7',   // balanceOfToken(address,address) — pons fee escrow
   uiMultiplier: '0xa60bf13d',     // uiMultiplier() — ERC-8056, implemented by Robinhood Chain stock/instrument tokens
 };
@@ -507,10 +524,22 @@ async function readDistributions() {
     pendingRaw: null, decimals: units.decimals, multiplier: units.multiplier,
   };
 
-  // Oil credited to the distributor in the pons fee escrow, not poured yet. Optional line.
-  if (isAddress(CONFIG.feeEscrowAddress)) {
-    try { out.pendingRaw = hexToBig(await ethCall(CONFIG.feeEscrowAddress, SEL.balanceOfToken + word(from) + word(reward))).toString(); }
-    catch { /* line is skipped */ }
+  /* Oil collected but not poured yet. It sits in two places, and both count:
+       - still credited to the distributor inside the pons fee escrow, and
+       - already claimed out of the escrow and held by the distributor itself.
+     Reading only the escrow understates the figure badly right after a claim.
+     Either call may fail on its own; the line is skipped only if both do. */
+  {
+    let pending = null;
+    if (isAddress(CONFIG.feeEscrowAddress)) {
+      try { pending = hexToBig(await ethCall(CONFIG.feeEscrowAddress, SEL.balanceOfToken + word(from) + word(reward))); }
+      catch { /* escrow unreadable; the held balance alone still counts */ }
+    }
+    try {
+      const held = hexToBig(await ethCall(reward, SEL.balanceOf + word(from)));
+      pending = (pending ?? 0n) + held;
+    } catch { /* keep whatever the escrow gave */ }
+    if (pending != null) out.pendingRaw = pending.toString();
   }
 
   const cache = loadDistCache(from, reward) || {
@@ -653,7 +682,7 @@ function renderStats(s, { stale = false, unreachable = false, loading = false } 
     // (unreachable) every source failed and nothing is cached.
     const note = unreachable ? 'Not available right now' : loading ? 'Reading the chain…' : 'Live after launch';
     ['totalDistributed', 'lastPayout', 'holders', 'price', 'marketCap', 'volume'].forEach((k) => setStat(k, '—', k === 'price' && !unreachable && !loading ? `in ${REWARD.symbol} · Live after launch` : note));
-    setStat('countdown', '—', unreachable || loading ? note : 'Measured from real pours');
+    setCountdownVisible(false);
     if (status) status.textContent = unreachable ? 'Data sources unreachable' : loading ? 'Reading the chain' : 'Live after launch';
     if (dot) dot.className = unreachable ? 'dot is-stale' : 'dot';
     if (meta) {
@@ -711,17 +740,18 @@ function renderStats(s, { stale = false, unreachable = false, loading = false } 
   }
 }
 
-// The countdown rests on the measured cadence only. No cadence, no countdown.
+// The countdown card exists only while a cadence has been measured from real pours.
+// No pour yet, one pour, or no readable pour times: the card is hidden, never a timer.
+function setCountdownVisible(visible) {
+  const card = $('[data-stat="countdown"]')?.closest('.stat');
+  if (card) card.hidden = !visible;
+  const grid = $('.stats');
+  if (grid) grid.classList.toggle('stats--five', !visible);
+}
 function renderCountdown(s) {
   const d = s?.distribution;
-  if (!d || !d.ok) { setStat('countdown', '—', d ? 'Pour data not available right now' : 'Vault address not set yet'); return; }
-  if (!d.cadence || !d.last?.ts) {
-    let why = 'No pour yet · nothing to measure';
-    if (d.rounds === 1) why = 'One pour so far · no cadence to measure yet';
-    else if (d.rounds > 1) why = 'Pour times not available right now';
-    setStat('countdown', '—', why);
-    return;
-  }
+  if (!d || !d.ok || !d.cadence || !d.last?.ts) { setCountdownVisible(false); return; }
+  setCountdownVisible(true);
   const { medianS, samples } = d.cadence;
   const mins = Math.max(1, Math.round(medianS / 60));
   const now = Date.now() / 1000;
@@ -985,6 +1015,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initBuyButtons();
   initListingLinks();
   initSocialLinks();
+  initWebsiteLink();
   initCopyButtons();
   initAddNetwork();
   initLivePanel();

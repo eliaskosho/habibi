@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /review/
 
-Sitemap: https://DOMAIN-TBD/sitemap.xml
+Sitemap: https://www.habibioil.xyz/sitemap.xml
