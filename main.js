@@ -463,20 +463,21 @@ const GALLERY_EXTS = ['webp', 'jpg', 'jpeg', 'png'];
 const GALLERY_BATCH = 6;
 const GALLERY_MAX = 300;
 const GALLERY_CAPTIONS = {
-  'meme-01': 'Habibi, the chart is beautiful today.',
-  'meme-02': 'Small buys. Big dreams.',
-  'meme-03': 'Same guy. Bigger plans.',
-  'meme-04': 'Habibi, come to Dubai.',
-  'meme-05': 'Good trades. Better views.',
-  'meme-06': 'The desert taught patience. The chart tests it.',
-  'meme-07': 'Higher, faster, further, habibi.',
-  'meme-08': 'Green car. Green candles. Coincidence, habibi?',
-  'meme-09': 'Habibi in orbit. The family follows.',
-  'meme-10': 'Street cred, habibi.',
-  'meme-11': 'Trade, chill, repeat.',
-  'meme-12': 'Boarding now. Destination: anywhere.',
-  'meme-13': 'No limits, habibi.',
-  'meme-14': 'Habibi, the best is yet to come.',
+  'meme-01': 'Habibi, come to Dubai.',
+  'meme-02': 'Rooftop, skyline, no notifications.',
+  'meme-03': 'Trade, chill, repeat.',
+  'meme-04': 'Habibi, the chart is beautiful today.',
+  'meme-05': 'Green car. Green candles. Coincidence, habibi?',
+  'meme-06': 'Street cred, habibi.',
+  'meme-07': 'Small buys. Big dreams.',
+  'meme-08': 'Habibi in orbit. The family follows.',
+  'meme-09': 'Same guy. Bigger plans.',
+  'meme-10': 'Counting blessings, habibi.',
+  'meme-11': 'Boarding now. Destination: anywhere.',
+  'meme-12': 'From earth to Mars, habibi.',
+  'meme-13': 'Good trades. Better views.',
+  'meme-14': 'No limits, habibi.',
+  'meme-15': 'Higher, faster, further.',
 };
 const captionFor = (url) => {
   const m = url.match(/([^/]+)\.[a-z0-9]+$/i);
