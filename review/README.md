@@ -16,19 +16,39 @@ Two house rules put an image here:
 
 | File | Why it was held back |
 |---|---|
-| _(none yet for the Solana batch)_ | |
+| _(none — see below)_ | |
 
-The Robinhood Chain batch that used to be listed here was retired with the rest of that
-artwork when the project moved to Solana. Nothing from it carries over.
+## The Solana batch was published in full, on instruction
 
-### Standing issue with the current artwork
+Nothing is held back right now. That is a decision, not an oversight: rule 1 would otherwise
+catch most of the set, and the owner asked twice for the supplied artwork to be used as-is
+after the marks were pointed out. What is in the gallery, and what each one carries:
 
-The mascot's green-and-white chest capsule is pump.fun's logo mark, and it recurs on flags,
-mugs, cans, backpacks and licence plates throughout the supplied set — including the logo and
-the banner. Several images also show the `pump` wordmark outright. Under rule 1 those cannot
-ship as graphics. The mascot design itself carries the mark, so this is an artwork decision
-for the project owner, not something a crop fixes. See "The mascot's chest emblem" in the
-root `README.md`.
+| File | Scene | Third-party marks in frame |
+|---|---|---|
+| `meme-01` | G-Wagon, Dubai night | Mercedes-Benz badge, `pump` wordmark on the plate |
+| `meme-02` | Rooftop, skyline | whisky bottle and glass |
+| `meme-03` | Couch, controller, dog | `pump` wordmark on the can |
+| `meme-04` | Trading desk | Razer logo on the chair |
+| `meme-05` | Lamborghini, villa | Lamborghini badge |
+| `meme-06` | Graffiti wall | "PUMP" gold chain |
+| `meme-07` | Flag on a ridge | `pump` wordmark on the flag |
+| `meme-08` | On the moon | capsule only |
+| `meme-09` | Santorini | `pump` wordmark on the backpack |
+| `meme-10` | Yacht, cash | champagne bottle |
+| `meme-11` | Private jet | capsule only |
+| `meme-12` | Mars flag | `pump` wordmark on the flag |
+| `meme-13` | Yacht, laptop | champagne bottle |
+| `meme-14` | Villa, helicopter | `pump` wordmark on the bag, Lamborghini |
+| `meme-15` | Skydiving | capsule only |
 
-To publish a held-back image anyway: move it to `assets/gallery/meme-NN.webp` with the next
-free number, and optionally add a caption to `GALLERY_CAPTIONS` in `main.js`.
+**The capsule is the bigger one.** The green-and-white capsule the mascot wears on the chest
+is pump.fun's logo mark, and it is in every image including `logo.webp`, `mascot.webp` and
+the favicons — it is part of the character design, so no crop reaches it. Only different
+artwork would. The previous Robinhood Chain set had exactly the same problem with a feather.
+
+Three images carry the capsule and nothing else: `meme-08`, `meme-11`, `meme-15`. If the rule
+is ever enforced strictly, those three and a redrawn mascot are the starting point.
+
+To publish a held-back image: move it to `assets/gallery/meme-NN.webp` with the next free
+number, and optionally add a caption to `GALLERY_CAPTIONS` in `main.js`.

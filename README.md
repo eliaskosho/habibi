@@ -5,14 +5,14 @@ Plain HTML, CSS and vanilla JS. No framework, no build step, no npm.
 
 ```
 index.html          the whole page
-styles.css          styles (sand/cream base, thobe green + gold, oil-black panels)
+styles.css          styles (palette measured from the artwork — see §4)
 main.js             CONFIG + all behaviour (live panel, Telegram gate, gallery)
 assets/
   logo.webp         square logo (topbar, footer)
   mascot.webp       cut-out mascot with alpha (hero)
   og.jpg            1200×630 social preview
   favicon-*.png, apple-touch-icon.png
-  banner.webp       wide banner shown above the gallery
+  (banner.webp)     wide banner above the gallery — NOT PRESENT, see §4
   gallery/          memes shown on the site (read automatically, meme-01.webp ...)
 review/             images held back for a decision (not read by the site, not deployed)
 tools/
@@ -88,19 +88,72 @@ If the source is down, the panel keeps the last known values (cached in the brow
 - **Holder count.** Solana's public RPC cannot give one. `getTokenLargestAccounts` returns the top accounts only; a real total needs an indexer (Helius, Birdeye, Solscan Pro) and every one of them wants an API key. A static page cannot hold a key without publishing it. So the tile is not on the page at all, rather than showing a number that is quietly wrong.
 - **Cashback figures.** pump.fun exposes no public endpoint for trader cashback. The site therefore states the 0.3 % fee and where it was pointed, and prints no amount, rate, or cadence it cannot verify.
 
+
 ---
 
-## 4. How the fee reaches traders
+## 4. Palette
+
+Every colour in `styles.css` is measured from the supplied artwork, not picked by eye, and
+every one of them is a custom property in the `:root` block. **Nothing below that block
+hardcodes a colour** — if you need a new shade, add a token.
+
+How they were sampled: the logo and the fourteen meme originals were quantised and counted.
+The most common non-white colour in the mascot artwork is the thobe green at **12.5 %** of
+all pixels, and across the whole meme set the greens cluster tightly at hue 138–146 with full
+saturation. That green is the brand; the rest of the palette is built from its hue.
+
+| Role | Token | Value | Where it came from |
+|---|---|---|---|
+| Accent | `--green` | `#007028` | the mascot's thobe — the single most common colour in the logo |
+| Accent, lighter | `--green-2` | `#00913a` | same hue, lifted for hover and for the live dot |
+| Accent, deep | `--green-deep` | `#00461a` | the shadowed folds of the thobe; the hero's lower field |
+| Ground | `--bg` | `#eef4ef` | hue 140 taken down to a tint, so the page and the logo share a hue |
+| Ground, second | `--bg-2` | `#dde9e0` | one step darker, for disabled controls and insets |
+| Neutral | `--ink` | `#0c1a11` | the artwork's outline black, carrying the same green cast |
+| Neutral, muted | `--ink-2` | `#3d5244` | body copy |
+| Neutral, quiet | `--ink-3` | `#55695b` | labels, fineprint, disabled button text |
+| Panel | `--panel` | `#05160c` | the darkest greens in the night-time memes |
+| Warm highlight | `--warm` | `#f8b068` | the mascot's own skin tone — the only non-green in the logo |
+
+**The hero runs into the logo's green.** The hero background ends on `--green-deep` and the
+disc behind the mascot is a `--green-2` → `--green` radial, so the cut-out sits on the same
+field it was drawn on. Without that the hero read as two different pictures stacked on top of
+each other.
+
+**Contrast.** Every foreground/background pairing the site actually uses was checked against
+WCAG AA (4.5:1 for body text, 3:1 for large). The audit is scripted, not eyeballed: it walks
+the rendered DOM, resolves each element's real background through transparency, and compares.
+All pass. Two things were changed to get there — the numbered circles in "How it works",
+"How to buy" and the roadmap were near-black on the accent green (2.97:1) and are now white
+(6.27:1); the disabled "Launching soon" button was re-checked at 4.72:1.
+
+The one element the script still flags is `.hero__title`, at 1.12:1. That is a limit of the
+checker, not a defect: the title is a white fill carried by a dark `-webkit-text-stroke`
+contour, which `getComputedStyle` cannot see. The contour is what provides the contrast, and
+it was thickened to `0.045em` so the letterform edge stays dark where the hero gradient is
+still light.
+
+### The banner is missing
+
+`assets/banner.webp` does not exist. The wide banner was not in the supplied batch — that
+folder held the logo artwork, fourteen meme originals and fifteen square crops, all of them
+square or near-square. `initBanner()` probes for `assets/banner.{webp,jpg,png}` and hides the
+figure when it finds nothing, so the gallery is correct without it. Drop a wide file in at
+that path and it appears; no code change.
+
+---
+
+## 5. How the fee reaches traders
 
 pump.fun charges **0.3 % on every buy and every sell**. Before launch the creator chooses, once and irreversibly, between keeping that fee and redirecting it to traders as cashback. Habibi redirects it.
 
 This is the part the old Robinhood Chain version of this site got differently, and the difference matters: **cashback follows trading, not balances.** It is not a holder payout. Holding $HABIBI does not earn it, and no copy on the site may imply otherwise. The mechanism is pump.fun's from end to end — this site runs no distribution logic, holds no keys and never touches the money.
 
-> **Check after launch.** The cashback choice is made in the pump.fun launch flow and cannot be changed afterwards. Confirm on the coin's own pump.fun page that cashback actually reads as enabled before pointing anyone at this copy. If it does not, §4 of this README, the "How it works" section, the Habibinomics cards and the hero lede all have to change — they are the only places that describe it.
+> **Check after launch.** The cashback choice is made in the pump.fun launch flow and cannot be changed afterwards. Confirm on the coin's own pump.fun page that cashback actually reads as enabled before pointing anyone at this copy. If it does not, §5 of this README, the "How it works" section, the Habibinomics cards and the hero lede all have to change — they are the only places that describe it.
 
 ---
 
-## 5. Gallery: adding and removing memes
+## 6. Gallery: adding and removing memes
 
 The gallery reads `assets/gallery/` automatically. Static hosts cannot list a folder, so the loader looks for files named:
 
@@ -131,11 +184,13 @@ Images that fail a house rule are kept out of the gallery and out of the deploy 
 
 ### The mascot's chest emblem
 
-The mascot wears a small green-and-white capsule on the chest, and the same mark appears on flags, mugs, cans and vehicles across the artwork, including the logo and the banner. That capsule is pump.fun's logo mark. The previous artwork had the same problem with a different owner — a feather that resembled Robinhood's. A launchpad's mark worn on the mascot's clothing reads as a partnership rather than as a description of where the token lives, which is why the house rules below forbid it and why several images sit in `review/`. Swapping in mark-free artwork is a matter of replacing the files in `assets/` and `assets/gallery/`.
+The mascot wears a small green-and-white capsule on the chest, and the same mark recurs on flags, mugs, cans, backpacks and licence plates across the artwork, including `logo.webp`, `mascot.webp` and the favicons. That capsule is pump.fun's logo mark, and several memes carry the `pump` wordmark outright. The previous artwork had the same problem with a different owner — a feather that resembled Robinhood's.
+
+A launchpad's mark worn on the mascot's clothing reads as a partnership rather than as a description of where the token lives, which is what the house rule below forbids. The set was published in full anyway, on the owner's explicit instruction after the marks were pointed out. `review/README.md` lists what each image carries, and names the three that carry the capsule and nothing else. Because the capsule is part of the character design rather than an overlay, no crop reaches it — only redrawn artwork would.
 
 ---
 
-## 6. Deploy
+## 7. Deploy
 
 No build step. Upload the folder as-is.
 
@@ -160,7 +215,7 @@ Opening `index.html` directly from disk works too, except the gallery manifest l
 
 ---
 
-## 7. Facts baked into the site
+## 8. Facts baked into the site
 
 | | |
 |---|---|
@@ -178,7 +233,7 @@ There is no wallet-connection code and no network-switch button on this site. Th
 
 To change any copy, edit `index.html` directly.
 
-## 8. House rules the copy follows
+## 9. House rules the copy follows
 
 - Jokes about oil, abundance and generosity. Never a people, an accent or a group as the punchline.
 - No "APY", "earn", "passive income", "guaranteed", no price predictions. Mechanics only.
