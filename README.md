@@ -1,12 +1,12 @@
 # Habibi ($HABIBI)
 
-Marketing site for **Habibi ($HABIBI)** on Robinhood Chain.
+Marketing site for **Habibi ($HABIBI)** on Solana, launched via pump.fun.
 Plain HTML, CSS and vanilla JS. No framework, no build step, no npm.
 
 ```
 index.html          the whole page
-styles.css          styles (sand/cream base, sunset orange + gold, oil-black panels)
-main.js             CONFIG + all behaviour (live panel, gallery, wallet button)
+styles.css          styles (sand/cream base, thobe green + gold, oil-black panels)
+main.js             CONFIG + all behaviour (live panel, Telegram gate, gallery)
 assets/
   logo.webp         square logo (topbar, footer)
   mascot.webp       cut-out mascot with alpha (hero)
@@ -23,49 +23,84 @@ tools/
 
 ## 1. CONFIG (launch data)
 
-Open `main.js`. The first thing in the file is the `CONFIG` block. It is the only thing you edit; every other file reads from it. The token launched on 2026-09-08, so the block now holds real values. Any key set back to `null` returns that part of the page to its pre-launch state on its own: buy buttons read "Launching soon", the CA reads "CA revealed at launch", missing links are removed (never a dead `#`), the live panel shows `—` with "Live after launch".
+Open `main.js`. The first thing in the file is the `CONFIG` block. It is the only thing you edit; every other file reads from it.
 
-| Key | Live value | What it switches on |
+**The token has not launched yet, so the launch keys are `null`.** That is a working state, not a broken one: buy buttons read "Launching soon" and are not clickable, the CA reads "CA revealed at launch" with the copy button disabled, missing links are removed from the DOM entirely (never a dead `#`), and the live panel shows `—` with "Live after launch". Fill a key in and that part of the page switches itself on. No other file needs touching.
+
+| Key | Value now | What it switches on |
 |---|---|---|
-| `contractAddress` | `0x79b5E43aA2e43eee21B9ddf1855a6dd2833Ac533` (checksummed; this exact string is shown and copied) | CA in topbar + hero, copy button, Blockscout link, live panel (holders, supply, price, market cap, volume) |
-| `buyUrl` | pons trade page for the token | Every "Buy" button and the footer pons link. If `null` while `contractAddress` is set, it is derived as `https://www.ponsfamily.com/launchpad/<contractAddress>` |
-| `dexscreener` | pair `0x6575c060…77d81` (HABIBI / USO on Uniswap v4) | Hero button, chip under the live panel, footer link. The pair id in the URL is also what the live panel reads price, market cap and 24 h volume from |
-| `explorer` | Blockscout token page | All "Blockscout" links. `null` = derived from the chain explorer + `contractAddress` |
+| `x` | `x.com/habibionsol_` | Every X link on the page. `null` = those links are removed |
+| `telegram` | `t.me/HabibiOnSolanaa` | Where the Telegram buttons point **once the group is open** — see §2. On its own it shows nothing |
+| `telegramOpensAt` | `null` | The countdown and the Telegram buttons. See §2 |
+| `contractAddress` | `null` | CA in topbar + hero, copy button, Solscan link, and the whole live panel. Must be a base58 Solana mint (32–44 chars) |
+| `buyUrl` | `null` | Every "Buy" button. If `null` while `contractAddress` is set, it is derived as `https://pump.fun/coin/<contractAddress>` |
+| `dexscreener` | `null` | Hero button, chip under the live panel, footer link |
+| `solscan` | `null` | All "Solscan" links. `null` = derived as `https://solscan.io/token/<contractAddress>` |
 | `website` | `https://www.habibioil.xyz/` | The domain chip in the footer. `null` = removed |
-| `telegram`, `x` | `t.me/HabibimemesRh`, `x.com/HabibiOilRH` | Every Telegram / X link on the page. `null` = those links are removed |
 | `dextools`, `coinmarketcap`, `coingecko` | `null`, not listed yet | Chips under the live panel. `null` = removed from the page |
-| `rewardTokenAddress` | `0xa30FA36Db767ad9eD3f7a60fC79526fB4d56D344` — USO, the tokenized United States Oil Fund token on Robinhood Chain, the pair's quote asset | Distribution stats, and picks the USO-quoted pair on DEXScreener |
-| `distributorAddress` | `0x62283AAae4C807807ddbC51ff85C694cd5582cdd` — the pons holder-distributor for this launch | "Oil poured to holders", "Last pour", measured cadence |
-| `distributionFromBlock` | `57601180`, the block of the token's creation transaction | Where the pour scan starts. Without it the scan is capped to the last ~3.5 days and the total is shown with "≈" |
-| `feeEscrowAddress` | `0xd3AFEB2a57f70eF218Aa82451c51B2fb0416Ac9e` — pons V2 fee escrow | "… USO collected, waiting for the next pour" under the total |
-| `totalDistributedCall` | `null` | Optional `{ to, data }` `eth_call` returning the lifetime total as `uint256`, if the vault ever exposes one |
 
-### How the distributor was identified (2026-09-08)
+**Address format.** `isAddress()` validates base58: `/^[1-9A-HJ-NP-Za-km-z]{32,44}$/`. The base58 alphabet has no `0`, `O`, `I` or `l`, and Solana addresses carry no `0x` prefix. The shortener keeps five characters at each end (`2Rbed…zpump`), because on Solana both ends carry meaning — unlike a hex address, there is no fixed prefix to throw away.
 
-Not guessed. `PonsV2LaunchFactory` (`0x7eD598Bc…`) exposes `getLaunchedToken(address)`; called with the Habibi contract it returns the launch record, whose `creatorFeeRecipient` is `0x62283AAae4C807807ddbC51ff85C694cd5582cdd`. That contract's own `token()` returns the Habibi address, and the pons fee escrow's `balanceOfToken(distributor, USO)` returns a growing USO balance credited to it. The same record confirms `creatorTaxBps = 100` (1 %) and `pairToken = USO`.
-
-**Domain.** The canonical URL, the Open Graph URL and `og:image` in `index.html`, plus `robots.txt` and `sitemap.xml`, all point at `https://www.habibioil.xyz/`. If the domain ever changes, that is a find-and-replace across those three files; `CONFIG.website` only drives the footer chip.
-
-### Where the live numbers come from
-
-| Stat | Source |
-|---|---|
-| Supply, decimals | Robinhood Chain RPC (`eth_call`) |
-| Holders | Blockscout API v2 (`/api/v2/tokens/<address>`, fallback `/counters`) |
-| Price, market cap, 24 h volume, trade count | DEXScreener public API, pair taken from `dexscreener` |
-| Oil poured, last pour, pour count | Robinhood Chain RPC: `eth_getLogs` for Oil transfers sent by `distributorAddress` since `distributionFromBlock`, chunked (250k blocks, halved on failure) and cached in the browser so only new blocks are scanned on refresh. Blockscout as a bounded fallback; `totalDistributedCall` if set |
-| Oil collected, waiting for the next pour | Two RPC reads added together: `feeEscrowAddress.balanceOfToken(distributorAddress, rewardTokenAddress)` (still in the escrow) plus `rewardToken.balanceOf(distributorAddress)` (already claimed out of the escrow, held by the vault). Reading only the escrow understates it badly right after a claim |
-| Next pour in | Median gap between the newest pours (up to 8), counted from the last one. **The card is not rendered at all until two real pours have been measured**, so the site never counts down to an event that has not happened. Never a fixed timer |
-
-If a source is down, the panel keeps the last known values (cached in the browser) with an "Updated HH:MM" stamp and the status "Reconnecting". It never shows a spinner forever.
-
-### How the fee reaches holders
-
-Every swap pays the 1 % creator tax in Oil to the pons hook, which sweeps it into the pons fee escrow. The escrow credits it to `distributorAddress`, the pons V2 token vault for this launch. The vault then multi-sends Oil to holders pro rata in one transaction per pour; each pour shows up as ERC-20 transfers from `distributorAddress`, which is what the live panel reads. Oil amounts are summed in raw units and displayed through the token's ERC-8056 `uiMultiplier()` if it has one. USD values use the Oil price implied by the DEXScreener pair.
+**Domain.** The canonical URL, the Open Graph URL and `og:image` in `index.html`, plus `robots.txt` and `sitemap.xml`, all point at `https://www.habibioil.xyz/`. If the domain changes, that is a find-and-replace across those three files; `CONFIG.website` only drives the footer chip.
 
 ---
 
-## 2. Gallery: adding and removing memes
+## 2. The Telegram countdown
+
+The Telegram link lives in `CONFIG` from the start, but the group is not announced until it is actually staffed. `CONFIG.telegramOpensAt` is what decides that — not whether the link is filled in.
+
+Set it to an ISO 8601 string **with an offset**, so it means the same instant everywhere:
+
+```js
+telegramOpensAt: '2026-09-14T14:00:00+02:00',
+```
+
+Three states, all handled:
+
+| `telegramOpensAt` | What renders |
+|---|---|
+| `null` | Nothing. No countdown, no Telegram button, no placeholder. The gate section is removed from the DOM |
+| in the future | The countdown band under the hero. Every Telegram button stays hidden |
+| in the past | The band is gone; the Telegram buttons appear and point at `CONFIG.telegram` |
+
+The clock counts toward that **fixed timestamp**, never `Date.now() + 24h`. Someone arriving ten minutes before opening sees ten minutes, not a fresh day. The switch to the open state happens live, on the running one-second tick, with no reload — and the remaining time is clamped at zero, so it can never render negative. The digits use `font-variant-numeric: tabular-nums` so they keep their width instead of twitching once a second.
+
+The gate is `hidden` in the markup and only revealed by JS, so no countdown flashes on a page where there is nothing to count.
+
+---
+
+## 3. Where the live numbers come from
+
+One source, one request: the DEXScreener public token endpoint (`/latest/dex/tokens/<mint>`). It is CORS-open and needs no key, which matters because this is a static site with no server to keep a key in. When several pairs exist, the one with the deepest liquidity wins — that is the pair whose price means anything.
+
+| Stat | Source |
+|---|---|
+| Market cap | DEXScreener `marketCap`, falling back to `fdv` |
+| Price | DEXScreener `priceUsd` and `priceNative` (in SOL) |
+| 24 h volume | DEXScreener `volume.h24` |
+| Trades | DEXScreener `txns.h24`, buys + sells |
+| Liquidity | DEXScreener `liquidity.usd` |
+
+If the source is down, the panel keeps the last known values (cached in the browser) with an "Updated HH:MM" stamp and the status "Reconnecting". It never shows a spinner forever. Before a pair exists the status reads "Waiting for the first trade".
+
+**What is deliberately not shown.**
+
+- **Holder count.** Solana's public RPC cannot give one. `getTokenLargestAccounts` returns the top accounts only; a real total needs an indexer (Helius, Birdeye, Solscan Pro) and every one of them wants an API key. A static page cannot hold a key without publishing it. So the tile is not on the page at all, rather than showing a number that is quietly wrong.
+- **Cashback figures.** pump.fun exposes no public endpoint for trader cashback. The site therefore states the 0.3 % fee and where it was pointed, and prints no amount, rate, or cadence it cannot verify.
+
+---
+
+## 4. How the fee reaches traders
+
+pump.fun charges **0.3 % on every buy and every sell**. Before launch the creator chooses, once and irreversibly, between keeping that fee and redirecting it to traders as cashback. Habibi redirects it.
+
+This is the part the old Robinhood Chain version of this site got differently, and the difference matters: **cashback follows trading, not balances.** It is not a holder payout. Holding $HABIBI does not earn it, and no copy on the site may imply otherwise. The mechanism is pump.fun's from end to end — this site runs no distribution logic, holds no keys and never touches the money.
+
+> **Check after launch.** The cashback choice is made in the pump.fun launch flow and cannot be changed afterwards. Confirm on the coin's own pump.fun page that cashback actually reads as enabled before pointing anyone at this copy. If it does not, §4 of this README, the "How it works" section, the Habibinomics cards and the hero lede all have to change — they are the only places that describe it.
+
+---
+
+## 5. Gallery: adding and removing memes
 
 The gallery reads `assets/gallery/` automatically. Static hosts cannot list a folder, so the loader looks for files named:
 
@@ -75,7 +110,7 @@ assets/gallery/meme-02.webp
 ...
 ```
 
-`.webp`, `.jpg`, `.jpeg` and `.png` all work. Numbering can have gaps of up to five. Remove a file and it simply disappears; add `meme-19.webp` and it shows up. No code changes.
+`.webp`, `.jpg`, `.jpeg` and `.png` all work. Numbering can have gaps of up to five. Remove a file and it simply disappears; add the next number and it shows up. No code changes.
 
 **Captions** are optional. `GALLERY_CAPTIONS` in `main.js` (section 9) maps `meme-NN` to a one-liner shown under the polaroid and in the lightbox. A meme without a caption shows no caption strip.
 
@@ -92,15 +127,15 @@ It converts to WebP (max 1080 px), skips duplicates, and continues the numbering
 
 ### Images held back in `review/`
 
-Eight images from the launch batch are in `review/`, not in the gallery. Each file name says why (a third-party wordmark or logo in the picture, or a joke at a group's expense). See `review/README.md`. To publish one anyway, move it to `assets/gallery/meme-NN.webp` with the next free number. `review/` is excluded from Vercel deploys via `.vercelignore`.
+Images that fail a house rule are kept out of the gallery and out of the deploy (`.vercelignore`), with the reason written down in `review/README.md`. To publish one anyway, move it to `assets/gallery/meme-NN.webp` with the next free number.
 
 ### The mascot's chest emblem
 
-The mascot wears a small feather-shaped emblem on the chest, and the same mark appears on barrels, flags and vehicles in most of the artwork, including the logo and the banner. It resembles the Robinhood feather. The project owner chose the logo and banner with this mark; swapping in mark-free artwork is a matter of replacing the files in `assets/` and `assets/gallery/`.
+The mascot wears a small green-and-white capsule on the chest, and the same mark appears on flags, mugs, cans and vehicles across the artwork, including the logo and the banner. That capsule is pump.fun's logo mark. The previous artwork had the same problem with a different owner — a feather that resembled Robinhood's. A launchpad's mark worn on the mascot's clothing reads as a partnership rather than as a description of where the token lives, which is why the house rules below forbid it and why several images sit in `review/`. Swapping in mark-free artwork is a matter of replacing the files in `assets/` and `assets/gallery/`.
 
 ---
 
-## 3. Deploy
+## 6. Deploy
 
 No build step. Upload the folder as-is.
 
@@ -125,29 +160,31 @@ Opening `index.html` directly from disk works too, except the gallery manifest l
 
 ---
 
-## 4. Facts baked into the site
+## 7. Facts baked into the site
 
 | | |
 |---|---|
-| Chain | Robinhood Chain, chain ID 4663 (`0x1237`), Arbitrum Orbit L2, gas in ETH |
-| RPC | `https://rpc.mainnet.chain.robinhood.com` |
-| Explorer | `https://robinhoodchain.blockscout.com` |
-| Launchpad | pons V2, `https://www.ponsfamily.com/launchpad` |
-| Contract | `0x79b5E43aA2e43eee21B9ddf1855a6dd2833Ac533`, verified on Blockscout, launched 2026-09-08 09:58 UTC in block 57601180 |
-| Pair | HABIBI / USO on Uniswap v4, DEXScreener id `0x6575c060…77d81` |
-| Paired asset / reward | USO (`0xa30FA36D…D344`), the tokenized United States Oil Fund token on Robinhood Chain. The copy calls it "Oil"; every number on the page carries the real ticker, USO |
+| Chain | Solana |
+| Launchpad | pump.fun |
+| Explorer | `https://solscan.io` |
+| Wallets named in "How to buy" | Phantom, Solflare |
+| Address format | base58, 32–44 characters, no `0x` prefix |
+| Contract | not launched yet — `CONFIG.contractAddress` is `null` |
 | Supply | 1,000,000,000, fixed |
-| Fee | 1 % creator tax on every trade (`creatorTaxBps = 100` in the pons launch record), collected in USO |
-| Distribution | to all holders, pro rata, handled natively by the pons V2 token vault: fees accrue in the pons escrow credited to the distributor, and the vault claims and multi-sends them in rounds. **The site does not state an interval.** 80 minutes after launch the escrow held 7.9 USO and no pour had happened yet, so the live panel showed "No pour yet" and hid the countdown. It shows only the cadence it measures |
+| Fee | 0.3 % on every trade, charged by pump.fun |
+| Where the fee goes | redirected to traders as cashback. Chosen once before launch, irreversible. **Not** a holder distribution |
 
-To change any copy, edit `index.html` directly. The "Add network to wallet" button calls `wallet_addEthereumChain` with the values in the `CHAIN` object at the top of `main.js`.
+There is no wallet-connection code and no network-switch button on this site. Those were Robinhood Chain artefacts (`wallet_addEthereumChain`, chain ID 4663, an RPC URL to copy) and they are gone — Solana wallets need none of it. The page never asks the visitor's wallet for anything.
 
-## 5. House rules the copy follows
+To change any copy, edit `index.html` directly.
+
+## 8. House rules the copy follows
 
 - Jokes about oil, abundance and generosity. Never a people, an accent or a group as the punchline.
 - No "APY", "earn", "passive income", "guaranteed", no price predictions. Mechanics only.
+- **No percentage anywhere except the real 0.3 % trading fee.**
 - No made-up numbers. If data is missing, the site says so.
-- No third-party logos or wordmarks (Robinhood, pons, the Oil issuer). The site may say it lives *on* Robinhood Chain and pays out *in* Oil.
-- `pons` in lowercase.
-- Risk text in the footer, including the US restriction for markets paired against tokenized instruments on pons. The risk text does not joke.
+- Nothing that implies hold-to-earn. Cashback follows trades, not balances.
+- No third-party logos or wordmarks as graphics — not pump.fun's, not Solana's. Writing "on Solana, launched via pump.fun" in text is a description and is fine; the same mark on the mascot's clothing is not.
+- Risk text in the footer. It does not joke.
 - No private key or seed phrase input anywhere. Ever.
