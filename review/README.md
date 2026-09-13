@@ -1,16 +1,34 @@
 # Held back for a decision
 
-These eight images from the launch batch are **not** shown on the site and are excluded from Vercel deploys (`.vercelignore`). Each was held back for one of two house rules: no third-party logos or wordmarks, and no joke at a group's expense.
+Images in this folder are **not** shown on the site and are excluded from Vercel deploys
+(`.vercelignore`). The `.webp` files here are also kept out of git (`.gitignore`), so this
+README is the record of what was set aside and why.
+
+Two house rules put an image here:
+
+1. **No third-party logos or wordmarks as graphics.** The site may *say* it lives on Solana
+   and launched via pump.fun — that is a description. A launchpad's mark printed on the
+   mascot's clothing, a flag, a mug or a licence plate reads as a partnership instead, and
+   the project has no such partnership. Car badges, fashion monograms and real company
+   signage fall under the same rule.
+2. **No joke at a group's expense.** The humour is abundance and generosity. Never a people,
+   an accent, a religion or a real conflict as the punchline.
 
 | File | Why it was held back |
 |---|---|
-| `4-steps_robinhood-wordmark_oil-company-logos.webp` | Step 3 shows the Robinhood app with its wordmark and feather, plus ExxonMobil, Chevron, Shell, bp and TotalEnergies logos. Step 4 has the same logos on share certificates. The text "Receive oil-stocks airdropped" and "Financial freedom" also promises something the project does not do. |
-| `boardroom_robinhood-oil-stock-wordmark.webp` | Whiteboard reads "Robinhood Oil stock" with the Robinhood feather. |
-| `bodyguards_emaar-sign.webp` | "EMAAR" storefront sign top left (Emaar Properties). |
-| `come-to-dubai_lamborghini-badge_lv-monogram.webp` | Lamborghini bull badge on the car hood; Louis Vuitton monogram on the luggage. A pity, because the line is one of the three headline lines. A crop that removes the bottom-left car and bottom-right luggage would fix it. |
-| `loyalty-falcon_lv-monogram-luggage.webp` | Louis Vuitton monogram on the trunks bottom right. |
-| `good-wives_ethnic-stereotype.webp` | Four women draped over the mascot, "Good wives, better life". This is the harem stereotype: a people as the punchline, not abundance. |
-| `machine-gun-houthi_real-conflict.webp` | The mascot firing a machine gun at boats flagged "Houthi". A real armed conflict and a real group, with violence as the joke. |
-| `drake-houthi_real-group-as-punchline.webp` | "Houthis stealing our oil" with masked fighters. A real group as the punchline. |
+| _(none yet for the Solana batch)_ | |
 
-To publish one anyway: move it to `assets/gallery/meme-NN.webp` with the next free number (currently `meme-19.webp`), optionally add a caption to `GALLERY_CAPTIONS` in `main.js`.
+The Robinhood Chain batch that used to be listed here was retired with the rest of that
+artwork when the project moved to Solana. Nothing from it carries over.
+
+### Standing issue with the current artwork
+
+The mascot's green-and-white chest capsule is pump.fun's logo mark, and it recurs on flags,
+mugs, cans, backpacks and licence plates throughout the supplied set — including the logo and
+the banner. Several images also show the `pump` wordmark outright. Under rule 1 those cannot
+ship as graphics. The mascot design itself carries the mark, so this is an artwork decision
+for the project owner, not something a crop fixes. See "The mascot's chest emblem" in the
+root `README.md`.
+
+To publish a held-back image anyway: move it to `assets/gallery/meme-NN.webp` with the next
+free number, and optionally add a caption to `GALLERY_CAPTIONS` in `main.js`.
