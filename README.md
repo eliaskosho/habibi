@@ -71,7 +71,16 @@ The gate is `hidden` in the markup and only revealed by JS, so no countdown flas
 
 ## 3. Where the live numbers come from
 
-One source, one request: the DEXScreener public token endpoint (`/latest/dex/tokens/<mint>`). It is CORS-open and needs no key, which matters because this is a static site with no server to keep a key in. When several pairs exist, the one with the deepest liquidity wins — that is the pair whose price means anything.
+DEXScreener, CORS-open and no key needed, which matters because this is a static site with no server to keep a key in. Two endpoints are tried in order:
+
+```
+1. https://api.dexscreener.com/tokens/v1/solana/<mint>     -> a bare ARRAY of pairs
+2. https://api.dexscreener.com/latest/dex/tokens/<mint>    -> an OBJECT with .pairs
+```
+
+**The shapes differ**, which was confirmed against real responses rather than assumed: the first answers with a plain array (`[]` when nothing is indexed), the second with an object whose `pairs` key is `null` in that case. The per-pair fields are identical, so `pairsFrom()` normalises both to a list before anything reads them. The fallback runs when the primary errors *or* returns nothing.
+
+When several pairs come back, **the one with the deepest liquidity wins** — never simply the first in the array, which is often a dust pair with a meaningless price.
 
 | Stat | Source |
 |---|---|
@@ -86,7 +95,9 @@ If the source is down, the panel keeps the last known values (cached in the brow
 **What is deliberately not shown.**
 
 - **Holder count.** Solana's public RPC cannot give one. `getTokenLargestAccounts` returns the top accounts only; a real total needs an indexer (Helius, Birdeye, Solscan Pro) and every one of them wants an API key. A static page cannot hold a key without publishing it. So the tile is not on the page at all, rather than showing a number that is quietly wrong.
-- **Cashback figures.** pump.fun exposes no public endpoint for trader cashback. The site therefore states the 0.3 % fee and where it was pointed, and prints no amount, rate, or cadence it cannot verify.
+- **Cashback figures.** Checked against pump.fun's own program documentation, not guessed. Cashback is tracked in **per-user** `UserVolumeAccumulator` accounts — a PDA from the seed `"user_volume_accumulator"` plus the wallet and the program id, one for the bonding-curve program and one for the AMM. Unclaimed cashback is read as the account's lamports minus rent-exempt (bonding curve) or its WSOL ATA balance (AMM), and claimed with a `claim_cashback` instruction.
+
+  Two things follow. There is **no token-wide aggregate** anywhere — no "total cashback paid for $HABIBI" figure exists to read. And the per-user figure needs the viewer's wallet address, which means wallet connection; this site deliberately has no wallet code and asks the visitor's wallet for nothing. So there is nothing a static page can honestly display, and there are no cashback tiles in the live panel. The site states the 0.3 % fee and where it was pointed, and prints no amount, rate or cadence.
 
 
 ---

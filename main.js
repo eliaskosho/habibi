@@ -30,7 +30,7 @@ const CONFIG = {
      null = neither countdown nor button, future = countdown,
      past = the Telegram buttons appear.
   --------------------------------------------------------------------- */
-  telegramOpensAt: null,
+  telegramOpensAt: '2026-09-15T16:48:06+02:00',
 
   website: 'https://www.habibioil.xyz/',   // footer link
 
@@ -249,20 +249,50 @@ function initCopyButtons() {
    no public endpoint for it, so the site never prints a cashback
    figure it cannot verify.
    ------------------------------------------------------------ */
-const DEXS_TOKEN_API = 'https://api.dexscreener.com/latest/dex/tokens/';
+/* Two endpoints, checked against real responses on 2026-09-14:
+
+     tokens/v1/solana/<mint>    -> a bare ARRAY of pair objects, [] when
+                                   nothing is indexed
+     latest/dex/tokens/<mint>   -> an OBJECT with a `pairs` array, which is
+                                   null when nothing is indexed
+
+   The shapes differ but the per-pair fields are identical, so both are
+   normalised to a plain list before anything reads them. */
+const DEXS_PRIMARY = 'https://api.dexscreener.com/tokens/v1/solana/';
+const DEXS_FALLBACK = 'https://api.dexscreener.com/latest/dex/tokens/';
+
+function pairsFrom(json) {
+  if (Array.isArray(json)) return json.filter(Boolean);
+  if (json && Array.isArray(json.pairs)) return json.pairs.filter(Boolean);
+  return [];
+}
+
+const liqUsd = (p) => {
+  const n = Number(p && p.liquidity && p.liquidity.usd);
+  return isFinite(n) ? n : 0;
+};
 
 function pickPair(pairs) {
-  const onSolana = pairs.filter((p) => p && p.chainId === 'solana');
-  const pool = onSolana.length ? onSolana : pairs.filter(Boolean);
-  // Deepest liquidity wins: that is the pair whose price actually means something.
-  return pool.slice().sort((a, b) => (b.liquidity?.usd || 0) - (a.liquidity?.usd || 0))[0] || null;
+  const onSolana = pairs.filter((p) => p.chainId === 'solana');
+  const pool = onSolana.length ? onSolana : pairs;
+  // Deepest liquidity wins — never simply the first entry in the array,
+  // which is often a dust pair with a meaningless price.
+  return pool.slice().sort((a, b) => liqUsd(b) - liqUsd(a))[0] || null;
 }
 
 const num = (v) => { const n = Number(v); return isFinite(n) ? n : null; };
 
 async function fetchStats() {
-  const json = await fetchJson(DEXS_TOKEN_API + encodeURIComponent(CONFIG.contractAddress));
-  const pair = pickPair(Array.isArray(json && json.pairs) ? json.pairs : []);
+  const mint = encodeURIComponent(CONFIG.contractAddress);
+  let pairs = [];
+  try {
+    pairs = pairsFrom(await fetchJson(DEXS_PRIMARY + mint));
+  } catch {
+    pairs = [];   // primary down: fall through to the older endpoint
+  }
+  if (!pairs.length) pairs = pairsFrom(await fetchJson(DEXS_FALLBACK + mint));
+
+  const pair = pickPair(pairs);
   const updatedAt = Math.floor(Date.now() / 1000);
   if (!pair) return { updatedAt, noPair: true };
 
@@ -394,14 +424,16 @@ function initLivePanel() {
    ------------------------------------------------------------ */
 const tg = { at: null, timer: null };
 
-// Never negative. Days appear only once there is at least one.
+// HH:MM:SS, or DD:HH:MM:SS once the gap is longer than a day.
+// Clamped at zero, so it can never render negative time.
 function fmtCountdown(ms) {
   let s = Math.max(0, Math.ceil(ms / 1000));
   const d = Math.floor(s / 86400); s -= d * 86400;
   const h = Math.floor(s / 3600);  s -= h * 3600;
   const m = Math.floor(s / 60);    s -= m * 60;
   const pad = (n) => String(n).padStart(2, '0');
-  return d > 0 ? `${d}d ${pad(h)}:${pad(m)}:${pad(s)}` : `${pad(h)}:${pad(m)}:${pad(s)}`;
+  const clock = `${pad(h)}:${pad(m)}:${pad(s)}`;
+  return d > 0 ? `${pad(d)}:${clock}` : clock;
 }
 
 function paintTelegramGate() {
