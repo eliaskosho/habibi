@@ -18,11 +18,11 @@ const CONFIG = {
   x:        'https://x.com/habibionsol_',
   telegram: 'https://t.me/HabibiOnSolanaa',
 
-  /* ---- Filled in after launch ---------------------------------------- */
-  contractAddress: null,   // Solana mint, base58
-  buyUrl:          null,   // pump.fun coin page
-  dexscreener:     null,
-  solscan:         null,
+  /* ---- Launch data ---------------------------------------------------- */
+  contractAddress: 'CmFurHrGGaodeAbgWvH5ewSU63woJKr1tLdLKWa8pump',   // Solana mint, base58
+  buyUrl:          'https://pump.fun/coin/CmFurHrGGaodeAbgWvH5ewSU63woJKr1tLdLKWa8pump',
+  dexscreener:     'https://dexscreener.com/solana/CmFurHrGGaodeAbgWvH5ewSU63woJKr1tLdLKWa8pump',
+  solscan:         'https://solscan.io/token/CmFurHrGGaodeAbgWvH5ewSU63woJKr1tLdLKWa8pump',
 
   /* ---- When the Telegram group opens --------------------------------
      ISO 8601 with an offset, e.g. '2026-09-14T14:00:00+02:00'.
@@ -30,7 +30,7 @@ const CONFIG = {
      null = neither countdown nor button, future = countdown,
      past = the Telegram buttons appear.
   --------------------------------------------------------------------- */
-  telegramOpensAt: '2026-09-15T16:48:06+02:00',
+  telegramOpensAt: '2026-09-15T17:09:35+02:00',
 
   website: 'https://www.habibioil.xyz/',   // footer link
 

@@ -25,17 +25,19 @@ tools/
 
 Open `main.js`. The first thing in the file is the `CONFIG` block. It is the only thing you edit; every other file reads from it.
 
-**The token has not launched yet, so the launch keys are `null`.** That is a working state, not a broken one: buy buttons read "Launching soon" and are not clickable, the CA reads "CA revealed at launch" with the copy button disabled, missing links are removed from the DOM entirely (never a dead `#`), and the live panel shows `—` with "Live after launch". Fill a key in and that part of the page switches itself on. No other file needs touching.
+**The launch keys are filled in.** Set any of them back to `null` and that part of the page returns to its pre-launch state on its own: buy buttons read "Launching soon" and stop being clickable, the CA reads "CA revealed at launch" with the copy button disabled, missing links are removed from the DOM entirely rather than left as a dead `#`, and the live panel shows `—`. No other file needs touching.
+
+The mint keypair was generated ahead of the launch, so there is a window in which the address is real but the account does not exist on-chain yet. The site handles it: DEXScreener answers with an empty array, the panel shows `—` with "No pair yet" and the status reads "Waiting for the first trade". It fills itself in on the next poll once trading starts — no redeploy.
 
 | Key | Value now | What it switches on |
 |---|---|---|
 | `x` | `x.com/habibionsol_` | Every X link on the page. `null` = those links are removed |
 | `telegram` | `t.me/HabibiOnSolanaa` | Where the Telegram buttons point **once the group is open** — see §2. On its own it shows nothing |
-| `telegramOpensAt` | `null` | The countdown and the Telegram buttons. See §2 |
-| `contractAddress` | `null` | CA in topbar + hero, copy button, Solscan link, and the whole live panel. Must be a base58 Solana mint (32–44 chars) |
-| `buyUrl` | `null` | Every "Buy" button. If `null` while `contractAddress` is set, it is derived as `https://pump.fun/coin/<contractAddress>` |
-| `dexscreener` | `null` | Hero button, chip under the live panel, footer link |
-| `solscan` | `null` | All "Solscan" links. `null` = derived as `https://solscan.io/token/<contractAddress>` |
+| `telegramOpensAt` | `2026-09-15T17:09:35+02:00` | The countdown and the Telegram buttons. See §2 |
+| `contractAddress` | `CmFur…a8pump` | CA in topbar + hero, copy button, Solscan link, and the whole live panel. Must be a base58 Solana mint (32–44 chars) |
+| `buyUrl` | pump.fun coin page | Every "Buy" button. If `null` while `contractAddress` is set, it is derived as `https://pump.fun/coin/<contractAddress>` |
+| `dexscreener` | DEXScreener token page | Hero button, chip under the live panel, footer link |
+| `solscan` | Solscan token page | All "Solscan" links. `null` = derived as `https://solscan.io/token/<contractAddress>` |
 | `website` | `https://www.habibioil.xyz/` | The domain chip in the footer. `null` = removed |
 | `dextools`, `coinmarketcap`, `coingecko` | `null`, not listed yet | Chips under the live panel. `null` = removed from the page |
 
